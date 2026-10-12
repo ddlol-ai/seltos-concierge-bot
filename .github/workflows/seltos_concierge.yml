@@ -1,7 +1,10 @@
 name: 🚗 Kia Seltos Hybrid Owner Concierge
 
 on:
-  workflow_dispatch: # cron-job.org 또는 GitHub 웹에서 즉시 수동 실행
+  schedule:
+    # 매일 한국 시간(KST) 12:00 (UTC 03:00) 정기 발송
+    - cron: '0 3 * * *'
+  workflow_dispatch: # GitHub 웹 또는 API에서 즉시 수동 실행 가능
 
 jobs:
   run-concierge:
