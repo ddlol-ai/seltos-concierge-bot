@@ -1,0 +1,30 @@
+name: 🚗 Kia Seltos Hybrid Owner Concierge
+
+on:
+  workflow_dispatch: # cron-job.org 또는 GitHub 웹에서 즉시 수동 실행
+
+jobs:
+  run-concierge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 환경 설정
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 의존성 패키지 설치
+        run: |
+          pip install -r requirements.txt
+
+      - name: 셀토스 오너 브리핑 수집 & 디스코드 발송
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          EXPECTED_DELIVERY_DATE: ${{ secrets.EXPECTED_DELIVERY_DATE }}
+        run: |
+          python main.py
