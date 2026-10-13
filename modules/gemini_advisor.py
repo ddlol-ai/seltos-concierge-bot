@@ -24,6 +24,7 @@ class GeminiSeltosAdvisor:
     """기아 수석 인스트럭터 & 오너 전담 컨시어지 AI"""
 
     API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
+    MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest"]
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
@@ -69,41 +70,42 @@ class GeminiSeltosAdvisor:
 }}
 """
 
-        for attempt in range(1, 4):
-            try:
-                url = f"{self.API_URL}?key={self.api_key}"
-                payload = {
-                    "contents": [{"parts": [{"text": prompt}]}],
-                    "generationConfig": {
-                        "temperature": 0.7,
-                        "responseMimeType": "application/json",
-                    },
-                }
-                req = urllib.request.Request(
-                    url,
-                    data=json.dumps(payload).encode("utf-8"),
-                    headers={"Content-Type": "application/json; charset=utf-8"},
-                )
-                with urllib.request.urlopen(req, timeout=30) as resp:
-                    resp_json = json.loads(resp.read().decode("utf-8"))
+        for model_name in self.MODELS:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={self.api_key}"
+            for attempt in range(1, 3):
+                try:
+                    payload = {
+                        "contents": [{"parts": [{"text": prompt}]}],
+                        "generationConfig": {
+                            "temperature": 0.7,
+                            "responseMimeType": "application/json",
+                        },
+                    }
+                    req = urllib.request.Request(
+                        url,
+                        data=json.dumps(payload).encode("utf-8"),
+                        headers={"Content-Type": "application/json; charset=utf-8"},
+                    )
+                    with urllib.request.urlopen(req, timeout=30) as resp:
+                        resp_json = json.loads(resp.read().decode("utf-8"))
 
-                candidates = resp_json.get("candidates", [])
-                if candidates:
-                    text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
-                    if text:
-                        res = json.loads(text)
-                        return ConciergeBriefing(
-                            greeting=res.get("greeting", "셀토스 하이브리드 오너님, 즐거운 하루 되세요!"),
-                            d_day_msg=res.get("d_day_msg", f"12월 초 신차 출고까지 약 {d_day}일 남았습니다. 완벽한 출고 검수를 함께 준비합니다."),
-                            recall_alert=res.get("recall_alert", "현재 셀토스 하이브리드 파워트레인 대상 긴급 리콜 이슈는 발견되지 않았습니다."),
-                            option_spotlight=res.get("option_spotlight", "빌트인캠 2 플러스의 주차 녹화와 증강현실 내비게이션으로 안전하고 쾌적한 드라이빙을 누려보세요."),
-                            owner_guide=res.get("owner_guide", "스마트 회생제동 모드를 활용하시면 브레이크 패드 마모를 줄이고 도심 연비를 극대화할 수 있습니다.")
-                        )
-                break
-            except Exception as e:
-                print(f"[Gemini 어드바이저 생성 오류 (시도 {attempt}/3)] {e}")
-                if attempt < 3:
-                    time.sleep(attempt * 2)
+                    candidates = resp_json.get("candidates", [])
+                    if candidates:
+                        text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                        if text:
+                            res = json.loads(text)
+                            return ConciergeBriefing(
+                                greeting=res.get("greeting", "셀토스 하이브리드 오너님, 즐거운 하루 되세요!"),
+                                d_day_msg=res.get("d_day_msg", f"12월 초 신차 출고까지 약 {d_day}일 남았습니다. 완벽한 출고 검수를 함께 준비합니다."),
+                                recall_alert=res.get("recall_alert", "현재 셀토스 하이브리드 파워트레인 대상 긴급 리콜 이슈는 발견되지 않았습니다."),
+                                option_spotlight=res.get("option_spotlight", "빌트인캠 2 플러스의 주차 녹화와 증강현실 내비게이션으로 안전하고 쾌적한 드라이빙을 누려보세요."),
+                                owner_guide=res.get("owner_guide", "스마트 회생제동 모드를 활용하시면 브레이크 패드 마모를 줄이고 도심 연비를 극대화할 수 있습니다.")
+                            )
+                    break
+                except Exception as e:
+                    print(f"[Gemini 어드바이저 오류 {model_name} (시도 {attempt}/2)] {e}")
+                    if attempt < 2:
+                        time.sleep(attempt * 2)
 
         return self._fallback_briefing(profile, d_day)
 

@@ -97,19 +97,20 @@ class DiscordSeltosNotifier:
         news_fields = []
         for it in news_items[:5]:
             icon = "🚨" if it.category == "RECALL" else ("⚡" if it.category == "TECH" else "📰")
+            time_badge = f"`{it.pub_date}` " if it.pub_date else ""
             title_link = f"[{it.title}]({it.link})"
             news_fields.append({
-                "name": f"{icon} {it.source} ({it.category})",
+                "name": f"{icon} {it.source} ({it.category}) • {time_badge}",
                 "value": title_link,
                 "inline": False,
             })
 
         news_embed = {
-            "title": "📡 셀토스 & 현대기아 하이브리드 실시간 모니터링 뉴스",
-            "description": "국토교통부, 자동차리콜센터 및 포털 최신 언론 보도 핫토픽 요약",
+            "title": "📡 셀토스 & 현대기아 하이브리드 최신 모니터링 뉴스",
+            "description": "최근 7일~14일 이내 보도된 신차·하이브리드·리콜 핫토픽",
             "color": 0x1A2B49,
-            "fields": news_fields if news_fields else [{"name": "공지", "value": "새로운 특이 결함이나 긴급 리콜 보도가 없습니다.", "inline": False}],
-            "footer": {"text": "실시간 데이터 수집 • 자동차리콜센터 & Google News"},
+            "fields": news_fields if news_fields else [{"name": "안내", "value": "최근 7일 이내 보도된 신규 리콜이나 특이 결함 기사가 없습니다. (정상 가동 중) ✅", "inline": False}],
+            "footer": {"text": "최신 뉴스 실시간 감시 • 구글 뉴스 & 자동차리콜센터"},
             "timestamp": datetime.utcnow().isoformat(),
         }
 
