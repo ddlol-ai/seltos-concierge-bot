@@ -15,6 +15,7 @@ class OwnerCarProfile:
     expected_delivery: str = "2026-12-05"  # 12월 초 출고 예정
     contract_date: str = "2026-08-22"      # 최초 계약 체결일
     initial_wait_number: int = 30          # 최초 계약 순번
+    next_check_date: str = "2026-11-16"    # 카마스터 3차 순번 확인 약속일 (한 자릿수 진입 체크)
     
     # 카마스터 대기 순번 추적 이력
     current_wait_number: int = 14  # 11월 3일 카마스터 조회 기준
@@ -42,6 +43,15 @@ class OwnerCarProfile:
             return (target - today).days
         except Exception:
             return 50
+
+    def get_days_until_next_check(self) -> int:
+        """다음 카마스터 연락 예정일까지 남은 D-Day 계산"""
+        try:
+            target = datetime.strptime(self.next_check_date, "%Y-%m-%d").date()
+            today = datetime.now().date()
+            return (target - today).days
+        except Exception:
+            return 13
 
     def get_summary_str(self) -> str:
         opts = ", ".join([o["name"] for o in self.options])

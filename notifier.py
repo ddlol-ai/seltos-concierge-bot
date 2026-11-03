@@ -60,11 +60,20 @@ class DiscordSeltosNotifier:
         d_day = profile.get_days_until_delivery()
         d_day_badge = f"D-{d_day}" if d_day > 0 else "출고 완료 🎉"
 
+        check_d_day = profile.get_days_until_next_check()
+        if check_d_day > 0:
+            next_check_str = f"📞 **카마스터 재확인 D-Day**: `D-{check_d_day}` ({profile.next_check_date} 연락 약속)"
+        elif check_d_day == 0:
+            next_check_str = f"🚨 **[오늘의 핵심 액션]**: **오늘은 카마스터에게 3차 순번 확인 연락하는 날입니다! 📞**"
+        else:
+            next_check_str = f"📞 **카마스터 3차 확인 완료**: 순번 재점검 완료"
+
         desc = (
             f"**{briefing.greeting}**\n\n"
             f"📌 **차량 사양**: `{profile.get_summary_str()}`\n"
             f"⏳ **출고 D-Day**: `{d_day_badge}` ({profile.expected_delivery} 전후 예정)\n"
             f"📊 **카마스터 대기 순번**: `현재 {profile.current_wait_number}번` (8/22 30번 계약 ➔ 총 16대 소진 완료! / 10/7 대비 -13명 급단축)\n"
+            f"{next_check_str}\n"
             f"> {briefing.d_day_msg}"
         )
 
