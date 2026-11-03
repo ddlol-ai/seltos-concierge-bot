@@ -14,6 +14,13 @@ class OwnerCarProfile:
     trim: str = "시그니처 (Signature)"
     expected_delivery: str = "2026-12-05"  # 12월 초 출고 예정
     
+    # 카마스터 대기 순번 추적 이력
+    current_wait_number: int = 14  # 11월 3일 카마스터 조회 기준
+    wait_history: List[Dict[str, any]] = field(default_factory=lambda: [
+        {"date": "2026-10-07", "rank": 27, "desc": "30번대 -> 27번"},
+        {"date": "2026-11-03", "rank": 14, "desc": "27번 -> 14번 (-13명 소진)"}
+    ])
+    
     # 추가 선택 옵션 목록
     options: List[Dict[str, str]] = field(default_factory=lambda: [
         {"name": "HUD 팩", "desc": "컴바이너 타입 헤드업 디스플레이, 레인센서"},

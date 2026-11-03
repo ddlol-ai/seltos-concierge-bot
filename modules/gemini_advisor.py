@@ -48,6 +48,7 @@ class GeminiSeltosAdvisor:
 [차주 차량 스펙]
 - 모델: {profile.model_year} {profile.model_name} {profile.powertrain} {profile.trim}
 - 출고 예정일: {profile.expected_delivery} (약 {d_day}일 남음)
+- 카마스터 계약 순번: 현재 {profile.current_wait_number}번 (10/7 27번에서 11/3 기준 14번으로 13대 급진척, 11월 말~12월 초순 생산 배정 임박)
 - 장착 옵션: {opts_str}
 
 [오늘 감지된 기아차 / 셀토스 / 현대기아 하이브리드 관련 뉴스]
