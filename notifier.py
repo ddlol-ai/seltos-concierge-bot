@@ -64,7 +64,7 @@ class DiscordSeltosNotifier:
             f"**{briefing.greeting}**\n\n"
             f"📌 **차량 사양**: `{profile.get_summary_str()}`\n"
             f"⏳ **출고 D-Day**: `{d_day_badge}` ({profile.expected_delivery} 전후 예정)\n"
-            f"📊 **카마스터 대기 순번**: `현재 {profile.current_wait_number}번` (10/7 27번 대비 **-13명 단축!** / 주당 약 3.4대 소진 중)\n"
+            f"📊 **카마스터 대기 순번**: `현재 {profile.current_wait_number}번` (8/22 30번 계약 ➔ 총 16대 소진 완료! / 10/7 대비 -13명 급단축)\n"
             f"> {briefing.d_day_msg}"
         )
 

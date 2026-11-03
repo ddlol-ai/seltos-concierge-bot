@@ -13,12 +13,15 @@ class OwnerCarProfile:
     powertrain: str = "하이브리드 (1.6 HEV)"
     trim: str = "시그니처 (Signature)"
     expected_delivery: str = "2026-12-05"  # 12월 초 출고 예정
+    contract_date: str = "2026-08-22"      # 최초 계약 체결일
+    initial_wait_number: int = 30          # 최초 계약 순번
     
     # 카마스터 대기 순번 추적 이력
     current_wait_number: int = 14  # 11월 3일 카마스터 조회 기준
     wait_history: List[Dict[str, any]] = field(default_factory=lambda: [
-        {"date": "2026-10-07", "rank": 27, "desc": "30번대 -> 27번"},
-        {"date": "2026-11-03", "rank": 14, "desc": "27번 -> 14번 (-13명 소진)"}
+        {"date": "2026-08-22", "rank": 30, "desc": "최초 계약 접수 (30번)"},
+        {"date": "2026-10-07", "rank": 27, "desc": "46일간 3대 소진 (-3)"},
+        {"date": "2026-11-03", "rank": 14, "desc": "27일간 13대 급소진 (-13)"}
     ])
     
     # 추가 선택 옵션 목록
